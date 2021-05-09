@@ -76,7 +76,7 @@ public class KeyInput extends KeyAdapter{
 //                    Logger.getLogger(KeyInput.class.getName()).log(Level.SEVERE, null, ex);
 //                }
                 new Menu().setVisible(true);
-                game.playSound("/anthem.wav");
+//                game.playSound("/anthem.wav");
                 game.close();
             }
         }

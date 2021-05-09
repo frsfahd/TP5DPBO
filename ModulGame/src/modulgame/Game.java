@@ -75,6 +75,7 @@ public class Game extends Canvas implements Runnable{
             handler.addObject(new Items(250,150, ID.Item));
 
             handler.addObject(new Player(200,200, ID.Player));
+            handler.addObject(new Enemy(700, 500, ID.Enemy));
         }
                 playSound2("/gup.wav");
         //        playSound2("/artillery_march.wav");
@@ -166,11 +167,12 @@ public class Game extends Canvas implements Runnable{
 //                playSound("/artillery_march.wav");
 //            }
             while(delta >= 1){
-                if(handler.object.size()==1){
+                if(handler.object.size()==2){
                     renderFood();
                     frames++;
 //                    System.out.println("go");
                 }
+                enemyMove();
                 tick();
                 delta--;
             }
@@ -202,6 +204,35 @@ public class Game extends Canvas implements Runnable{
 
     }
     
+    void enemyMove(){
+        int min=1;
+        int max=4;
+        int val = (int)Math.floor(Math.random()*(max-min+1)+min);
+        int range = (int)Math.floor(Math.random()*(20-10+1)+10);
+        if(gameState == STATE.Game){
+            for(int i = 0;i<handler.object.size();i++){
+                if(handler.object.get(i).getId() == ID.Enemy){
+                    GameObject tempObject = handler.object.get(i);
+                    switch (val){
+                        case 1:
+                           tempObject.setVel_x(-(range));
+                           break;
+                        case 2:
+                            tempObject.setVel_x(+(range));
+                            break;
+                        case 3:
+                            tempObject.setVel_y(-(range));
+                            break;
+                        case 4:
+                            tempObject.setVel_y(+(range));
+                            break;
+                    }
+                }     
+            }
+             
+        }
+    }
+    
     private void tick(){
         handler.tick();
         int min_score=1;
@@ -225,6 +256,18 @@ public class Game extends Canvas implements Runnable{
                             random_time = (int)Math.floor(Math.random()*(10-min_time+1)+min_time);     //range(1-5)
                             score = score + random_score;
                             time = time + random_time;
+                            break;
+                        }
+                    }
+                    else if(handler.object.get(i).getId() == ID.Enemy){
+                         if(checkCollision(playerObject, handler.object.get(i))){
+//                            playSound2("/laser.wav");
+//                              playSound("/Eat.wav");
+//                              playSound("/buzzer.wav");
+                            gameState = STATE.GameOver;
+                            stopSound2();
+                                
+
                             break;
                         }
                     }
